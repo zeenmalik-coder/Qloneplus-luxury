@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Qlone+ | Elite Fragrances</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Playfair+Display:ital,wght@0,400;1,400&display=swap');
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #fdfcf8; 
+            color: #4a4a4a;
+            width: 100%;
+            overflow-x: hidden;
+        }
+
+        .font-serif { font-family: 'Playfair Display', serif; }
+
+        .product-card {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            background: #ffffff;
+            border: 1px solid #f1f1f1;
+            transition: all 0.5s ease;
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.03);
+            border-color: #e5d5b7;
+        }
+
+        .image-container {
+            aspect-ratio: 4 / 5;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #fafafa;
+            overflow: hidden;
+        }
+
+        #menu-overlay {
+            clip-path: circle(0% at 0% 0%);
+            transition: clip-path 0.6s cubic-bezier(0.77, 0, 0.175, 1);
+            background: #fdfcf8;
+        }
+        #menu-overlay.active {
+            clip-path: circle(150% at 0% 0%);
+        }
+
+        .nav-icon span { transition: all 0.3s ease; background-color: #4a4a4a; }
+
+        @keyframes pulse-gold {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+        .cart-animate { animation: pulse-gold 0.3s ease-in-out; }
+
+        #cart-sidebar {
+            transform: translateX(100%);
+            transition: transform 0.5s cubic-bezier(0.77, 0, 0.175, 1);
+            visibility: hidden;
+        }
+        #cart-sidebar.open {
+            transform: translateX(0);
+            visibility: visible;
+        }
+        .cart-item-row {
+            border-bottom: 1px solid #eeeae0;
+            padding: 15px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        @media (max-width: 1024px) {
+            .product-card { padding: 1.25rem; }
+        }
+
+        @media (max-width: 768px) {
+            h1 { font-size: 3.5rem !important; line-height: 1.1; }
+            main { padding-top: 3rem; padding-bottom: 3rem; }
+            .grid { gap: 1.5rem !important; }
+            .product-card button { padding-top: 1rem; padding-bottom: 1rem; font-size: 10px; }
+        }
+
+        @media (max-width: 480px) {
+            h1 { font-size: 2.8rem !important; }
+            .product-card { padding: 1rem; border-radius: 1.5rem; }
+            .image-container { margin-bottom: 1rem; }
+            #cart-float { bottom: 1.5rem; right: 1.5rem; }
+            .cart-item-row span { font-size: 12px !important; }
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+<div id="cart-sidebar" class="fixed top-0 right-0 h-full w-full md:w-[400px] bg-white z-[200] shadow-2xl flex flex-col">
+    <div class="p-6 border-b border-gray-100 flex justify-between items-center bg-[#fdfcf8]">
+        <h2 class="font-serif italic text-xl text-[#2d2d2d]">Your Collection</h2>
+        <button onclick="toggleCart()" class="text-[10px] uppercase tracking-widest font-bold text-gray-500 hover:text-black transition">Close</button>
+    </div>
+    
+    <div id="cart-items-list" class="flex-grow overflow-y-auto p-6">
+        <p id="empty-msg" class="text-center text-gray-400 text-sm mt-20 font-light">Your collection is empty.</p>
+    </div>
+
+    <div id="delivery-details" class="hidden px-6 py-4 bg-gray-50 border-t border-gray-100 space-y-3">
+        <p class="text-[9px] uppercase tracking-widest font-bold text-[#b59410]">Delivery Information</p>
+        <input type="text" id="cust-name" placeholder="Full Name" class="w-full p-2.5 text-xs border border-gray-200 rounded-lg focus:outline-none focus:border-[#b59410]">
+        <input type="email" id="cust-email" placeholder="Email Address" class="w-full p-2.5 text-xs border border-gray-200 rounded-lg focus:outline-none focus:border-[#b59410]">
+        <input type="text" id="cust-address" placeholder="Shipping Address" class="w-full p-2.5 text-xs border border-gray-200 rounded-lg focus:outline-none focus:border-[#b59410]">
+        <div class="flex gap-2">
+            <input type="text" id="cust-city" placeholder="City" class="w-1/2 p-2.5 text-xs border border-gray-200 rounded-lg focus:outline-none focus:border-[#b59410]">
+            <select id="payment-method" class="w-1/2 p-2.5 text-xs border border-gray-200 rounded-lg focus:outline-none bg-white text-gray-500">
+                <option value="Cash on Delivery">COD</option>
+                <option value="Bank Transfer">Bank Transfer</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="p-6 border-t border-gray-100 bg-[#fdfcf8]">
+        <div class="flex justify-between items-center mb-6">
+            <span class="text-[10px] uppercase tracking-widest font-bold text-gray-400">Total</span>
+            <span id="cart-total-price" class="font-serif text-lg text-[#2d2d2d]">Rs. 0</span>
+        </div>
+        <button onclick="checkoutWhatsApp()" class="w-full py-5 bg-[#2d2d2d] text-white uppercase text-[10px] font-bold tracking-[0.3em] hover:bg-[#b59410] transition-all rounded-full shadow-lg">
+            Finalize via WhatsApp
+        </button>
+    </div>
+</div>
+
+<div id="cart-float" class="fixed bottom-8 right-8 z-[120]">
+    <button onclick="toggleCart()" class="bg-[#2d2d2d] text-white p-5 rounded-full shadow-2xl flex items-center gap-4 hover:bg-[#b59410] transition-all duration-500 group">
+        <span class="text-[10px] font-bold uppercase tracking-widest pl-2 hidden group-hover:block">View Collection</span>
+        <div class="relative">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
+                <path d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .491.592l-1.5 8A.5.5 0 0 1 13 12H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5zM3.102 4l1.313 7h8.17l1.313-7H3.102zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4z"/>
+            </svg>
+            <span id="cart-count" class="absolute -top-3 -right-3 bg-[#b59410] text-white text-[9px] font-bold px-1.5 py-0.5 rounded-full border-2 border-[#fdfcf8]">0</span>
+        </div>
+    </button>
+</div>
+
+    <nav class="flex justify-between items-center px-6 md:px-12 py-5 sticky top-0 bg-[#fdfcf8]/90 backdrop-blur-md z-[100] border-b border-[#eeeae0]">
+        <button id="menu-btn" class="nav-icon group flex flex-col space-y-1.5 focus:outline-none z-[110] md:hidden">
+            <span class="w-6 h-0.5"></span>
+            <span class="w-6 h-0.5"></span>
+            <span class="w-4 h-0.5 group-hover:w-6"></span>
+        </button>
+        <div class="text-lg md:text-xl font-semibold tracking-[0.4em] text-[#2d2d2d]">QLONE+</div>
+        <ul class="hidden md:flex space-x-10 uppercase text-[10px] font-bold tracking-[0.2em] text-[#9a9a9a]">
+            <li><a href="index.html" class="hover:text-[#b59410] transition">Home</a></li>
+            <li><a href="about.html" class="hover:text-[#b59410] transition">About Us</a></li>
+            <li><a href="#contact-us" class="hover:text-[#b59410] transition">Contact</a></li>
+        </ul>
+        <div class="hidden md:block">
+            <a href="https://wa.me/923137036460" class="text-[10px] font-bold tracking-widest uppercase border border-[#e5d5b7] px-7 py-3 text-[#b59410] hover:bg-[#b59410] hover:text-white transition duration-500 rounded-full">WhatsApp Inquire</a>
+        </div>
+        <div class="w-6 md:hidden"></div>
+    </nav>
+
+    <div id="menu-overlay" class="fixed inset-0 z-[90] flex items-center md:hidden">
+        <div class="px-10 w-full">
+            <ul class="flex flex-col space-y-8">
+                <li><a href="index.html" class="text-5xl font-serif italic text-[#2d2d2d]">Home</a></li>
+                <li><a href="about.html" class="text-5xl font-serif italic text-[#2d2d2d]">About</a></li>
+                <li><a href="#contact-us" onclick="toggleMenu()" class="text-5xl font-serif italic text-[#2d2d2d]">Contact</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <section class="relative min-h-[80vh] flex items-center justify-center text-center px-6 overflow-hidden">
+        <div class="absolute inset-0 z-0">
+            <img src="ASSETS/background.avif" class="w-full h-full object-cover opacity-30" alt="Scent">
+            <div class="absolute inset-0 bg-gradient-to-b from-[#fdfcf8]/50 to-[#fdfcf8]"></div>
+        </div>
+        <div class="relative z-10 max-w-3xl">
+            <span class="uppercase tracking-[0.5em] text-[10px] text-[#b59410] font-bold mb-5 block">The Essence of Elegance</span>
+            <h1 class="text-5xl md:text-8xl font-serif mb-8 text-[#2d2d2d] leading-tight">QLONE+ <br><span class="italic font-normal text-[#b59410]">Pure Extraction</span></h1>
+            <p class="max-w-md mx-auto mb-12 text-[#7a7a7a] text-sm md:text-base tracking-wide leading-relaxed font-light">Luxury recreations of the world's most iconic scents. <br> Crafted for 24-hour presence.</p>
+            <a href="https://wa.me/923137036460" class="inline-block px-14 py-5 bg-[#2d2d2d] text-white uppercase text-[10px] font-bold tracking-[0.3em] hover:bg-[#b59410] transition-all duration-700 rounded-full shadow-lg">Order via WhatsApp</a>
+        </div>
+    </section>
+
+    <main class="max-w-7xl mx-auto px-6 py-24">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10">
+            <div class="product-card group p-6 rounded-2xl">
+                <div class="image-container mb-8 rounded-xl"><img src="ASSETS/dark flex 12.png" class="w-3/4 mix-blend-multiply" alt="Dark Flex"></div>
+                <div class="text-center flex flex-col flex-grow">
+                    <h3 class="font-bold uppercase tracking-widest text-[11px] text-[#2d2d2d]">Dark Flex</h3>
+                    <p class="font-serif text-lg text-[#2d2d2d] mt-2">Rs. 2,399</p>
+                    <button onclick="addToCart('Dark Flex', 2399)" class="mt-6 block w-full py-3 bg-[#2d2d2d] text-white text-[9px] uppercase font-bold tracking-widest hover:bg-[#b59410] transition-all rounded-full">Add to Collection</button>
+                    <button onclick="orderNowSingle('Dark Flex')" class="mt-2 block w-full py-3 bg-transparent border border-[#eeeae0] text-[#7a7a7a] text-[8px] uppercase font-bold tracking-widest rounded-full">Direct Order</button>
+                </div>
+            </div>
+            <div class="product-card group p-6 rounded-2xl">
+                <div class="image-container mb-8 rounded-xl"><img src="ASSETS/melted gold 11.png" class="w-3/4 mix-blend-multiply" alt="Melted Gold"></div>
+                <div class="text-center flex flex-col flex-grow">
+                    <h3 class="font-bold uppercase tracking-widest text-[11px] text-[#2d2d2d]">Melted Gold</h3>
+                    <p class="font-serif text-lg text-[#2d2d2d] mt-2">Rs. 2,399</p>
+                    <button onclick="addToCart('Melted Gold', 2399)" class="mt-6 block w-full py-3 bg-[#2d2d2d] text-white text-[9px] uppercase font-bold tracking-widest hover:bg-[#b59410] transition-all rounded-full">Add to Collection</button>
+                    <button onclick="orderNowSingle('Melted Gold')" class="mt-2 block w-full py-3 bg-transparent border border-[#eeeae0] text-[#7a7a7a] text-[8px] uppercase font-bold tracking-widest rounded-full">Direct Order</button>
+                </div>
+            </div>
+            <div class="product-card group p-6 rounded-2xl">
+                <div class="image-container mb-8 rounded-xl"><img src="ASSETS/she is rare.png" class="w-3/4 mix-blend-multiply" alt="She Is Rare"></div>
+                <div class="text-center flex flex-col flex-grow">
+                    <h3 class="font-bold uppercase tracking-widest text-[11px] text-[#2d2d2d]">She Is Rare</h3>
+                    <p class="font-serif text-lg text-[#2d2d2d] mt-2">Rs. 2,399</p>
+                    <button onclick="addToCart('She Is Rare', 2399)" class="mt-6 block w-full py-3 bg-[#2d2d2d] text-white text-[9px] uppercase font-bold tracking-widest hover:bg-[#b59410] transition-all rounded-full">Add to Collection</button>
+                    <button onclick="orderNowSingle('She Is Rare')" class="mt-2 block w-full py-3 bg-transparent border border-[#eeeae0] text-[#7a7a7a] text-[8px] uppercase font-bold tracking-widest rounded-full">Direct Order</button>
+                </div>
+            </div>
+            <div class="product-card group p-6 rounded-2xl">
+                <div class="image-container mb-8 rounded-xl"><img src="ASSETS/tinted rose 2.png" class="w-3/4 mix-blend-multiply" alt="Tinted Rose"></div>
+                <div class="text-center flex flex-col flex-grow">
+                    <h3 class="font-bold uppercase tracking-widest text-[11px] text-[#2d2d2d]">Tinted Rose</h3>
+                    <p class="font-serif text-lg text-[#2d2d2d] mt-2">Rs. 2,399</p>
+                    <button onclick="addToCart('Tinted Rose', 2399)" class="mt-6 block w-full py-3 bg-[#2d2d2d] text-white text-[9px] uppercase font-bold tracking-widest hover:bg-[#b59410] transition-all rounded-full">Add to Collection</button>
+                    <button onclick="orderNowSingle('Tinted Rose')" class="mt-2 block w-full py-3 bg-transparent border border-[#eeeae0] text-[#7a7a7a] text-[8px] uppercase font-bold tracking-widest rounded-full">Direct Order</button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <section id="contact-us" class="max-w-6xl mx-auto px-6 py-20 border-t border-gray-100">
+        <div class="text-center mb-12">
+            <h2 class="text-[10px] uppercase tracking-[0.4em] text-gray-400 font-bold mb-4">Connect With Us</h2>
+            <h3 class="text-3xl font-serif">Contact Our Team</h3>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
+            <div class="p-8 bg-white border border-gray-50 rounded-sm">
+                <p class="text-[10px] uppercase tracking-widest text-[#b59410] font-bold mb-2">Private Inquiry</p>
+                <a href="https://wa.me/923137036460" class="text-2xl font-serif italic hover:text-green-600 transition">Chat with Concierge</a>
+            </div>
+            <div class="p-8 bg-white border border-gray-50 rounded-sm">
+                <p class="text-[10px] uppercase tracking-widest text-[#b59410] font-bold mb-2">Social Platforms</p>
+                <div class="flex flex-col space-y-2 mt-4">
+                    <a href="https://www.facebook.com/share/1VKuAEzkXv/?mibextid=LQQJ4d" target="_blank" class="text-sm font-bold uppercase tracking-widest hover:text-blue-700">Facebook</a>
+                    <a href="https://www.tiktok.com/@qloneplus?_r=1&_t=ZS-94Lq8VNDWxF" target="_blank" class="text-sm font-bold uppercase tracking-widest hover:text-black">TikTok</a>
+                    <a href="https://instagram.com/qloneplus" target="_blank" class="text-sm font-bold uppercase tracking-widest hover:text-pink-600">Instagram</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="bg-white py-12 px-6 border-t border-gray-50 text-center">
+        <h3 class="font-semibold tracking-[0.4em] text-sm mb-4 uppercase">QLONE+</h3>
+        <p class="text-[8px] text-gray-300 tracking-[0.3em] uppercase">© 2026 QLONE+ LUXURY PK</p>
+    </footer>
+
+    <script>
+        const menuBtn = document.getElementById('menu-btn');
+        const overlay = document.getElementById('menu-overlay');
+        function toggleMenu() { overlay.classList.toggle('active'); menuBtn.classList.toggle('open'); }
+        menuBtn.addEventListener('click', toggleMenu);
+
+        let cart = [];
+
+        function toggleCart() { document.getElementById('cart-sidebar').classList.toggle('open'); }
+
+        function addToCart(name, price) {
+            cart.push({ id: Date.now(), name, price });
+            renderCart();
+            toggleCart(); 
+        }
+
+        function removeItem(id) {
+            cart = cart.filter(product => product.id !== id);
+            renderCart();
+        }
+
+        function renderCart() {
+            const listContainer = document.getElementById('cart-items-list');
+            const countBadge = document.getElementById('cart-count');
+            const totalPrice = document.getElementById('cart-total-price');
+            const deliverySection = document.getElementById('delivery-details');
+            
+            countBadge.innerText = cart.length;
+            listContainer.innerHTML = "";
+            let total = 0;
+
+            if (cart.length === 0) {
+                listContainer.innerHTML = '<p class="text-center text-gray-400 text-sm mt-20 font-light">Your collection is empty.</p>';
+                totalPrice.innerText = "Rs. 0";
+                deliverySection.classList.add('hidden');
+                return;
+            }
+
+            deliverySection.classList.remove('hidden');
+            cart.forEach(product => {
+                total += product.price;
+                const row = document.createElement('div');
+                row.className = "cart-item-row";
+                row.innerHTML = `<div><span class="text-[11px] font-bold uppercase tracking-widest text-[#2d2d2d]">${product.name}</span><br><span class="text-xs text-[#b59410]">Rs. ${product.price.toLocaleString()}</span></div><button onclick="removeItem(${product.id})" class="text-[9px] uppercase font-bold text-red-400">Remove</button>`;
+                listContainer.appendChild(row);
+            });
+            totalPrice.innerText = "Rs. " + total.toLocaleString();
+        }
+
+        function checkoutWhatsApp() {
+            if (cart.length === 0) return alert("Your collection is empty.");
+
+            const name = document.getElementById('cust-name').value;
+            const email = document.getElementById('cust-email').value;
+            const address = document.getElementById('cust-address').value;
+            const city = document.getElementById('cust-city').value;
+            const payment = document.getElementById('payment-method').value;
+
+            if(!name || !email || !address || !city) return alert("Please fill in all details including email.");
+
+            let message = "*QLONE+ LUXURY ORDER*%0a%0a";
+            message += `*Customer:* ${name}%0a*Email:* ${email}%0a*Address:* ${address}%0a*City:* ${city}%0a*Payment:* ${payment}%0a%0a*Items:*%0a`;
+            
+            let totalCost = 0;
+            cart.forEach((item, index) => {
+                message += `${index + 1}. *${item.name}* - Rs. ${item.price}%0a`;
+                totalCost += item.price;
+            });
+
+            message += `%0a*Total:* Rs. ${totalCost.toLocaleString()}%0a%0a_Sent from Website_`;
+            window.open(`https://wa.me/923137036460?text=${message}`, '_blank');
+        }
+
+        function orderNowSingle(name) {
+            const message = `Hello QLONE+, I would like to order *${name}* now.`;
+            window.open(`https://wa.me/923137036460?text=${encodeURIComponent(message)}`, '_blank');
+        }
+    </script>
+</body>
+</html>
