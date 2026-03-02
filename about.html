@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <title>About Us | QLONE+</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Playfair+Display:ital,wght@0,400;1,400&display=swap');
+
+        body {
+            font-family: 'Inter', sans-serif;
+            /* Matched Soft Champagne Background */
+            background-color: #fdfcf8;
+            color: #4a4a4a;
+        }
+        .font-serif { font-family: 'Playfair Display', serif; }
+
+        /* Fixed Toggle Logic */
+        #menu-overlay {
+            clip-path: circle(0% at 0% 0%);
+            transition: clip-path 0.6s cubic-bezier(0.77, 0, 0.175, 1);
+            visibility: hidden;
+            background-color: #fdfcf8;
+        }
+        #menu-overlay.active {
+            clip-path: circle(150% at 0% 0%);
+            visibility: visible;
+        }
+
+        /* Hamburger Animation */
+        .nav-icon span { transition: all 0.3s ease; background-color: #2d2d2d; }
+        .nav-icon.open span:nth-child(1) { transform: rotate(45deg) translate(5px, 5px); }
+        .nav-icon.open span:nth-child(2) { opacity: 0; }
+        .nav-icon.open span:nth-child(3) { transform: rotate(-45deg) translate(7px, -6px); }
+    </style>
+</head>
+<body class="overflow-x-hidden">
+
+    <nav class="flex justify-between items-center px-6 md:px-12 py-5 sticky top-0 bg-[#fdfcf8]/90 backdrop-blur-md z-[100] border-b border-[#eeeae0]">
+        
+        <button id="menu-btn" class="md:hidden nav-icon group flex flex-col space-y-1.5 focus:outline-none z-[110]">
+            <span class="w-6 h-0.5"></span>
+            <span class="w-6 h-0.5"></span>
+            <span class="w-4 h-0.5 group-hover:w-6"></span>
+        </button>
+
+        <div class="text-lg md:text-xl font-semibold tracking-[0.4em] text-[#2d2d2d]">QLONE+</div>
+
+        <ul class="hidden md:flex space-x-10 uppercase text-[10px] font-bold tracking-[0.2em] text-[#9a9a9a]">
+            <li><a href="index.html" class="hover:text-[#b59410] transition">Home</a></li>
+            <li><a href="about.html" class="text-[#2d2d2d]">About Us</a></li>
+            <li><a href="https://wa.me/923296971638" class="hover:text-[#b59410] transition">Contact</a></li>
+        </ul>
+
+        <div class="w-6 md:hidden"></div>
+    </nav>
+
+    <div id="menu-overlay" class="fixed inset-0 z-[90] flex items-center md:hidden">
+        <div class="px-10 w-full text-center">
+            <ul class="flex flex-col space-y-8">
+                <li><a href="index.html" class="text-5xl font-serif italic text-[#2d2d2d]">Home</a></li>
+                <li><a href="about.html" class="text-5xl font-serif italic text-[#2d2d2d] underline decoration-[#b59410]">About Us</a></li>
+                <li><a href="https://wa.me/923137036460" class="text-5xl font-serif italic text-[#2d2d2d]">Contact</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <main class="max-w-5xl mx-auto px-6 py-12 md:py-24">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-20 items-center">
+            
+            <div class="relative w-full">
+                <div class="bg-white rounded-2xl overflow-hidden shadow-sm border border-[#eeeae0] flex items-center justify-center p-3">
+                    <img src="ASSETS/About1.png" class="w-full h-auto max-h-[500px] md:max-h-[600px] object-contain grayscale hover:grayscale-0 transition duration-1000" alt="About Qlone">
+                </div>
+                <div class="absolute -bottom-4 -right-4 bg-[#2d2d2d] p-6 text-white hidden md:block z-10 rounded-xl shadow-xl">
+                    <p class="text-xl font-serif italic text-[#b59410]">24h+</p>
+                    <p class="text-[7px] uppercase tracking-widest opacity-60">Performance</p>
+                </div>
+            </div>
+
+            <div class="space-y-6 md:space-y-8">
+                <span class="uppercase tracking-[0.5em] text-[10px] text-[#b59410] font-bold">The Philosophy</span>
+                <h1 class="text-5xl md:text-7xl font-serif leading-tight text-[#2d2d2d]">The Art of <br>Extraction.</h1>
+                <p class="text-[#7a7a7a] font-light leading-relaxed text-sm md:text-base">
+                   Qlone+ is more than fragrance — it is presence in its purest form. Soft as a whisper yet powerful as desire, it blooms with elegance while carrying the depth of dark woods and warm spice. <br> <br> Fresh, magnetic, and undeniably bold, it moves beyond labels and beyond limits. Each drop lingers like a memory, commanding the air without ever asking for attention. <br> <br> Crafted for those who leave marks, not footprints, Qlone+ is unseen, unforgettable — a statement in every breath.
+                </p>
+                <div class="pt-6 border-t border-[#eeeae0]">
+                    <h4 class="font-bold text-[10px] uppercase tracking-widest mb-4 text-[#2d2d2d]">Follow our journey</h4>
+                    <a href="https://www.instagram.com/qloneplus" class="text-sm font-serif italic text-[#b59410] hover:text-[#2d2d2d] transition">@qloneplus on Instagram</a>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <section class="max-w-6xl mx-auto px-6 py-24 grid grid-cols-1 md:grid-cols-3 gap-16 text-center border-t border-[#eeeae0]">
+        <div>
+            <h3 class="font-bold uppercase tracking-[0.3em] text-[11px] mb-4 text-[#2d2d2d]">Precision Extraction</h3>
+            <p class="text-[13px] text-[#7a7a7a] leading-relaxed font-light">We utilize advanced distillation techniques to ensure every note remains true to its original inspiration, capturing the soul of the fragrance.</p>
+        </div>
+        <div>
+            <h3 class="font-bold uppercase tracking-[0.3em] text-[11px] mb-4 text-[#2d2d2d]">24-Hour Longevity</h3>
+            <p class="text-[13px] text-[#7a7a7a] leading-relaxed font-light">Our formulas are concentrated at the highest parfum level, guaranteed to evolve on your skin and last from dawn until deep into the night.</p>
+        </div>
+        <div>
+            <h3 class="font-bold uppercase tracking-[0.3em] text-[11px] mb-4 text-[#2d2d2d]">Rare Ingredients</h3>
+            <p class="text-[13px] text-[#7a7a7a] leading-relaxed font-light">From Saffron sourced from high altitudes to deep Turkish Rose, we only use ingredients that command attention.</p>
+        </div>
+    </section>
+
+ <section class="bg-[#1a1a1a] py-20 px-6">
+        <div class="max-w-6xl mx-auto">
+            <div class="text-center mb-16">
+                <h2 class="text-[#b59410] uppercase tracking-[0.4em] text-[9px] font-bold mb-4">The Ingredients</h2>
+                <h3 class="text-3xl font-serif text-white italic">Textures of Luxury</h3>
+            </div>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <div class="texture-box group relative">
+                    <img src="ASSETS/dark.jpeg" class="w-full h-full object-cover opacity-60 grayscale group-hover:grayscale-0 group-hover:scale-110 transition duration-700" alt="Leather">
+                    <div class="absolute inset-0 flex items-center justify-center"><span class="text-white uppercase tracking-widest text-[9px] font-bold"></span></div>
+                </div>
+                <div class="texture-box group relative">
+                    <img src="ASSETS/mrlted.jpeg" class="w-full h-full object-cover opacity-60 grayscale group-hover:grayscale-0 group-hover:scale-110 transition duration-700" alt="Rose">
+                    <div class="absolute inset-0 flex items-center justify-center"><span class="text-white uppercase tracking-widest text-[9px] font-bold"></span></div>
+                </div>
+                <div class="texture-box group relative">
+                    <img src="ASSETS/rare.jpeg" class="w-full h-full object-cover opacity-60 grayscale group-hover:grayscale-0 group-hover:scale-110 transition duration-700" alt="Saffron">
+                    <div class="absolute inset-0 flex items-center justify-center"><span class="text-white uppercase tracking-widest text-[9px] font-bold"></span></div>
+                </div>
+                <div class="texture-box group relative">
+                    <img src="ASSETS/tinted.jpeg" class="w-full h-full object-cover opacity-60 grayscale group-hover:grayscale-0 group-hover:scale-110 transition duration-700" alt="Vanilla">
+                    <div class="absolute inset-0 flex items-center justify-center"><span class="text-white uppercase tracking-widest text-[9px] font-bold"></span></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="max-w-4xl mx-auto px-6 py-32">
+        <div class="space-y-24">
+            <div class="flex flex-col md:flex-row items-center gap-12">
+                <span class="text-7xl font-serif italic text-[#b59410] opacity-30">01</span>
+                <div>
+                    <h4 class="font-bold uppercase tracking-widest text-[12px] mb-3 text-[#2d2d2d]">The Selection</h4>
+                    <p class="text-sm text-[#7a7a7a] leading-relaxed font-light">We analyze thousands of global fragrance profiles to identify the most timeless and sought-after scents in existence.</p>
+                </div>
+            </div>
+            <div class="flex flex-col md:flex-row items-center gap-12">
+                <span class="text-7xl font-serif italic text-[#b59410] opacity-30">02</span>
+                <div>
+                    <h4 class="font-bold uppercase tracking-widest text-[12px] mb-3 text-[#2d2d2d]">Molecular Balancing</h4>
+                    <p class="text-sm text-[#7a7a7a] leading-relaxed font-light">Our lab technicians adjust the oil concentration to perform perfectly in Pakistan’s climate, ensuring the scent lasts through the heat.</p>
+                </div>
+            </div>
+            <div class="flex flex-col md:flex-row items-center gap-12">
+                <span class="text-7xl font-serif italic text-[#b59410] opacity-30">03</span>
+                <div>
+                    <h4 class="font-bold uppercase tracking-widest text-[12px] mb-3 text-[#2d2d2d]">The Final Extraction</h4>
+                    <p class="text-sm text-[#7a7a7a] leading-relaxed font-light">Every bottle of QLONE+ is hand-checked for clarity and potency before it is sealed and delivered to your doorstep.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="py-16 text-center border-t border-[#eeeae0]">
+        <p class="text-[9px] text-[#9a9a9a] tracking-[0.4em] uppercase">© 2026 QLONE+ LUXURY PK</p>
+    </footer>
+
+    <script>
+        const menuBtn = document.getElementById('menu-btn');
+        const overlay = document.getElementById('menu-overlay');
+
+        menuBtn.addEventListener('click', () => {
+            overlay.classList.toggle('active');
+            menuBtn.classList.toggle('open');
+            document.body.style.overflow = overlay.classList.contains('active') ? 'hidden' : 'auto';
+        });
+    </script>
+</body>
+</html>
